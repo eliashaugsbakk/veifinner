@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeKantInnleser {
+public class NodeKantInteressepunktInnleser {
         public static List<Node> lesNoder(String nodefilsti) {
                 List<Node> nodeliste = null;
                 try (BufferedReader br = new BufferedReader(new FileReader(nodefilsti))) {
@@ -53,5 +53,31 @@ public class NodeKantInnleser {
                         Integer.parseInt(kantData[3].strip()),
                         Integer.parseInt(kantData[4].strip())
                 );
+        }
+
+        public static List<Interessepunkt> lesInteressepunkter(String interessepunktfilsti, List<Node> noder) {
+                List<Interessepunkt> interessepunktliste = null;
+                try (BufferedReader br = new BufferedReader(new FileReader(interessepunktfilsti))) {
+                        int antallLinjer = Integer.parseInt(br.readLine().strip());
+                        interessepunktliste = new ArrayList<>(antallLinjer);
+                        String linje;
+                        while ((linje = br.readLine()) != null) {
+                                interessepunktliste.add(lesInteressepunkt(linje, noder));
+                        }
+                } catch (IOException e) {
+                        System.err.println("Klarte ikke lese inn kanter: " + e.getMessage());
+                }
+                return interessepunktliste;
+        }
+
+        private static Interessepunkt lesInteressepunkt(String linje, List<Node> noder) {
+                String[] interessepunktdata = linje.strip().split("\\s+", 3);
+
+                int nodeNr = Integer.parseInt(interessepunktdata[0]);
+                int kode = Integer.parseInt(interessepunktdata[1]);
+                String navn = interessepunktdata[2].substring(1, interessepunktdata[2].length() - 1);
+
+                Node node = noder.get(nodeNr);
+                return new Interessepunkt(node, kode , navn);
         }
 }
