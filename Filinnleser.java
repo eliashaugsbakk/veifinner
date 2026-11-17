@@ -12,6 +12,9 @@ public class Filinnleser {
                         while ((linje = br.readLine()) != null) {
                                 nodeliste.add(lesNode(linje));
                         }
+                        if (nodeliste.size() != antallLinjer) {
+                                System.err.println("Leste ikke inn alle noder");
+                        }
                 } catch (IOException e) {
                         System.err.println("Klarte ikke lese inn noder: " + e.getMessage());
                 }
@@ -35,6 +38,9 @@ public class Filinnleser {
                         String linje;
                         while ((linje = br.readLine()) != null) {
                                 kantliste.add(lesKant(linje, noder));
+                        }
+                        if (kantliste.size() != antallLinjer) {
+                                System.err.println("Leste ikke inn alle noder");
                         }
                 } catch (IOException e) {
                         System.err.println("Klarte ikke lese inn kanter: " + e.getMessage());
@@ -65,6 +71,9 @@ public class Filinnleser {
                         String linje;
                         while ((linje = br.readLine()) != null) {
                                 interessepunktliste.add(lesInteressepunkt(linje, noder));
+                        }
+                        if (interessepunktliste.size() != antallLinjer) {
+                                System.err.println("Leste ikke inn alle noder");
                         }
                 } catch (IOException e) {
                         System.err.println("Klarte ikke lese inn kanter: " + e.getMessage());
