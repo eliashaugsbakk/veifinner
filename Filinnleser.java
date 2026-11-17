@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeKantInteressepunktInnleser {
+public class Filinnleser {
         public static List<Node> lesNoder(String nodefilsti) {
                 List<Node> nodeliste = null;
                 try (BufferedReader br = new BufferedReader(new FileReader(nodefilsti))) {
@@ -46,13 +46,15 @@ public class NodeKantInteressepunktInnleser {
                 String[] kantData = line.split("\\s+");
                 Node fraNode = noder.get(Integer.parseInt(kantData[0]));
                 Node tilNode = noder.get(Integer.parseInt(kantData[1]));
-                return new Kant(
+                var kant = new Kant(
                         fraNode,
                         tilNode,
                         Integer.parseInt(kantData[2].strip()),
                         Integer.parseInt(kantData[3].strip()),
                         Integer.parseInt(kantData[4].strip())
                 );
+                fraNode.kanter.add(kant);
+                return kant;
         }
 
         public static List<Interessepunkt> lesInteressepunkter(String interessepunktfilsti, List<Node> noder) {
