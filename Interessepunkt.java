@@ -3,7 +3,7 @@ import java.util.EnumSet;
 public class Interessepunkt {
         Node node;
         String navn;
-        private final EnumSet<Interessepunkttype> typer = EnumSet.noneOf(Interessepunkttype.class);
+        EnumSet<Interessepunkttype> typer = EnumSet.noneOf(Interessepunkttype.class);
 
         public Interessepunkt(Node node, int kode, String navn) {
                 this.node = node;

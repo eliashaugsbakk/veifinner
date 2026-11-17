@@ -6,6 +6,7 @@ public class Node {
     double breddegrad;
     double lengdegrad;
     List<Kant> kanter = new ArrayList<>();
+    List<Interessepunkt> interessepunkter = new ArrayList<>();
 
         public Node(int nodeNr, double breddegrad, double lengdegrad) {
         this.nodeNr = nodeNr;

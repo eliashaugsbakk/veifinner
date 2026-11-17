@@ -80,6 +80,8 @@ public class Filinnleser {
                 String navn = interessepunktdata[2].substring(1, interessepunktdata[2].length() - 1);
 
                 Node node = noder.get(nodeNr);
-                return new Interessepunkt(node, kode , navn);
+                var interessepunkt = new Interessepunkt(node, kode , navn);
+                node.interessepunkter.add(interessepunkt);
+                return interessepunkt;
         }
 }
