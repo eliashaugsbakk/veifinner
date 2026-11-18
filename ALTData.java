@@ -14,7 +14,7 @@ Gedser node:    '58898   54.5770445 11.9316767' (sør)
 Joensuu node:   '5594864 62.6004072 29.7626200' (øst)
 Bergen node:    '5542364 60.3942531  5.3253087' (vest)
  */
-public class ALTdata {
+public class ALTData {
         private List<List<Integer>> avstanderFraLandemerker = new ArrayList<>();
         private List<List<Integer>> avstanderTilLandemerker = new ArrayList<>();
         private final List<Integer> landemerker = new ArrayList<>(List.of(
@@ -24,7 +24,7 @@ public class ALTdata {
             5542364
         ));
 
-        public ALTdata(List<Node> noder, String avstandFil) throws IOException {
+        public ALTData(List<Node> noder, String avstandFil) throws IOException {
                 File fil = new File(avstandFil);
 
                 if (!fil.exists()) {
@@ -76,13 +76,15 @@ public class ALTdata {
                                 br.write("landemerke:" + landemerker.get(i) + ":fra\n");
 
                                 for (int j = 0; j < avstanderFraLandemerker.get(i).size(); j++) {
-                                        br.write(j + "," + avstanderFraLandemerker.get(i).get(j) + "\n");
+                                        br.write(
+                                            j + "," + avstanderFraLandemerker.get(i).get(j) + "\n");
                                 }
 
                                 br.write("landemerke:" + landemerker.get(i) + ":til\n");
 
                                 for (int j = 0; j < avstanderTilLandemerker.get(i).size(); j++) {
-                                        br.write(j + "," + avstanderTilLandemerker.get(i).get(j) + "\n");
+                                        br.write(
+                                            j + "," + avstanderTilLandemerker.get(i).get(j) + "\n");
                                 }
                         }
                 }
@@ -113,17 +115,20 @@ public class ALTdata {
 
                                         if (indeks == -1) {
                                                 throw new IllegalArgumentException(
-                                                    "Ukjent landemerke i ALTdata-filen: " + landemerke
+                                                    "Ukjent landemerke i ALTData-filen: " +
+                                                        landemerke
                                                 );
                                         }
 
                                         if (retning.equals("fra")) {
-                                                gjeldendeAvstander = avstanderFraLandemerker.get(indeks);
+                                                gjeldendeAvstander =
+                                                    avstanderFraLandemerker.get(indeks);
                                         } else if (retning.equals("til")) {
-                                                gjeldendeAvstander = avstanderTilLandemerker.get(indeks);
+                                                gjeldendeAvstander =
+                                                    avstanderTilLandemerker.get(indeks);
                                         } else {
                                                 throw new IllegalArgumentException(
-                                                    "Ukjent retning i ALTdata-filen: " + retning
+                                                    "Ukjent retning i ALTData-filen: " + retning
                                                 );
                                         }
 
@@ -135,7 +140,7 @@ public class ALTdata {
 
                                         if (nodeNr != gjeldendeAvstander.size()) {
                                                 throw new IllegalArgumentException(
-                                                    "Uventet nodeindeks i ALTdata-filen: " + nodeNr
+                                                    "Uventet nodeindeks i ALTData-filen: " + nodeNr
                                                 );
                                         }
 
@@ -144,6 +149,7 @@ public class ALTdata {
                         }
                 }
         }
+
         private List<Node> reverserGraf(List<Node> noder) {
                 List<Node> reverserteNoder = new ArrayList<>(noder.size());
 
@@ -171,5 +177,9 @@ public class ALTdata {
                 }
 
                 return reverserteNoder;
+        }
+
+        public List<Integer> hentLandemerker() {
+                return landemerker;
         }
 }

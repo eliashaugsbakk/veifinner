@@ -11,18 +11,18 @@ private enum Algoritme {
 private static class Sesjon {
         final List<Node> noder;
         final String altFil;
-        ALTdata altdata;
+        ALTData altdata;
 
         Sesjon(List<Node> noder, String altFil) {
                 this.noder = noder;
                 this.altFil = altFil;
         }
 
-        ALTdata hentALTdata() throws IOException {
+        ALTData hentALTdata() throws IOException {
                 if (altdata == null) {
                         long start = System.nanoTime();
                         IO.println("Laster eller beregner ALT-data...");
-                        altdata = new ALTdata(noder, altFil);
+                        altdata = new ALTData(noder, altFil);
                         skrivTid("Klargjøring av ALT-data", System.nanoTime() - start);
                 }
                 return altdata;
@@ -100,7 +100,7 @@ private static void finnRute(Scanner input, Sesjon sesjon) throws IOException {
         Node til = lesNode(input, sesjon.noder, "Til-nodeindeks: ");
         Algoritme algoritme = lesAlgoritme(input);
 
-        ALTdata altdata = algoritme == Algoritme.ALT
+        ALTData altdata = algoritme == Algoritme.ALT
             ? sesjon.hentALTdata() : null;
         long start = System.nanoTime();
         List<Node> rute = algoritme == Algoritme.DIJKSTRA
@@ -189,7 +189,7 @@ private static Algoritme lesAlgoritme(Scanner input) {
         while (true) {
                 IO.println("Algoritme:");
                 IO.println("1. Dijkstra");
-                IO.println("2. ALT*");
+                IO.println("2. ALT");
                 int valg = lesHeltall(input, "Velg algoritme: ");
                 if (valg == 1) {
                         return Algoritme.DIJKSTRA;
@@ -267,7 +267,7 @@ private static void skrivDestinasjon(Node node, Interessepunkttype type) {
 private static void skrivAlgoritmetid(Algoritme algoritme, long nanosekunder) {
         System.out.printf(
             Locale.ROOT, "%s brukte %.3f ms.%n",
-            algoritme == Algoritme.DIJKSTRA ? "Dijkstra" : "ALT*",
+            algoritme == Algoritme.DIJKSTRA ? "Dijkstra" : "ALT",
             nanosekunder / 1_000_000.0
         );
 }
