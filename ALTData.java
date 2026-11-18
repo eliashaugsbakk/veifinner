@@ -9,10 +9,10 @@ import java.util.List;
 
 /*
 Noder
-Nordkapp node:  '2531818 71.1680015 25.7816449' (nord)
-Gedser node:    '58898   54.5770445 11.9316767' (sør)
-Joensuu node:   '5594864 62.6004072 29.7626200' (øst)
-Bergen node:    '5542364 60.3942531  5.3253087' (vest)
+Nordkapp node:          '2531818 71.1680015 25.7816449' (nord)
+Gedser node:            '58898   54.5770445 11.9316767' (sør)
+Lappeenranta node:      '377173 61.0583417 28.1862293'  (øst)
+Bergen node:            '5542364 60.3942531  5.3253087' (vest)
  */
 public class ALTData {
         private List<List<Integer>> avstanderFraLandemerker = new ArrayList<>();
@@ -20,7 +20,7 @@ public class ALTData {
         private final List<Integer> landemerker = new ArrayList<>(List.of(
             2531818,
             58898,
-            5594864,
+            377173,
             5542364
         ));
 
