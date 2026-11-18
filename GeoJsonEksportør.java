@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 public class GeoJsonEksportør {
         public void eksporterRute(Path fil, List<Node> rute) throws IOException {
@@ -50,9 +51,14 @@ public class GeoJsonEksportør {
 
         public void eksporterDestinasjoner(Path fil, List<Node> destinasjoner,
             Interessepunkttype type) throws IOException {
+                eksporterDestinasjoner(fil, destinasjoner, Set.of(type));
+        }
+
+        public void eksporterDestinasjoner(Path fil, List<Node> destinasjoner,
+            Set<Interessepunkttype> typer) throws IOException {
                 Objects.requireNonNull(fil, "fil");
                 Objects.requireNonNull(destinasjoner, "destinasjoner");
-                Objects.requireNonNull(type, "type");
+                Objects.requireNonNull(typer, "typer");
 
                 StringBuilder geoJson = new StringBuilder();
                 geoJson.append("{\n  \"type\": \"FeatureCollection\",\n  \"features\": [");
@@ -60,10 +66,11 @@ public class GeoJsonEksportør {
                 for (int i = 0; i < destinasjoner.size(); i++) {
                         Node node = Objects.requireNonNull(destinasjoner.get(i), "destinasjonsnode");
                         String navn = node.interessepunkter.stream()
-                            .filter(interessepunkt -> interessepunkt.typer.contains(type))
+                            .filter(interessepunkt ->
+                                interessepunkt.typer.stream().anyMatch(typer::contains))
                             .map(interessepunkt -> interessepunkt.navn)
                             .findFirst()
-                            .orElse(type.toString());
+                            .orElse(beskrivDestinasjonstyper(typer));
 
                         geoJson.append(i == 0 ? "\n" : ",\n")
                             .append("    {\n")
@@ -76,7 +83,7 @@ public class GeoJsonEksportør {
                             .append(node.nodeNr)
                             .append(",\n")
                             .append("        \"destination_type\": \"")
-                            .append(jsonEscape(type.toString()))
+                            .append(jsonEscape(beskrivDestinasjonstyper(typer)))
                             .append("\"\n")
                             .append("      },\n")
                             .append("      \"geometry\": {\n")
@@ -92,6 +99,12 @@ public class GeoJsonEksportør {
                 }
                 geoJson.append("  ]\n}\n");
                 Files.writeString(fil, geoJson, StandardCharsets.UTF_8);
+        }
+
+        private String beskrivDestinasjonstyper(Set<Interessepunkttype> typer) {
+                return typer.stream()
+                    .map(Interessepunkttype::toString)
+                    .collect(java.util.stream.Collectors.joining(" eller "));
         }
 
         private void appendCoordinates(StringBuilder geoJson, Node node) {

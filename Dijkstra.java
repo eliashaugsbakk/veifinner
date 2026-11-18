@@ -1,11 +1,18 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 
 public class Dijkstra {
+        private int sistProsesserteNoder;
+
+        public int hentSistProsesserteNoder() {
+                return sistProsesserteNoder;
+        }
         private class DijkstraNode {
                 final Node node;
                 final int avstand;
@@ -52,6 +59,7 @@ public class Dijkstra {
         }
 
         public List<Node> dijkstraFraTil(List<Node> noder, Node fraNode, Node tilNode) {
+                sistProsesserteNoder = 0;
                 List<Integer> avstander = new ArrayList<>(noder.size());
                 PriorityQueue<DijkstraNode> prioritetskø = new PriorityQueue<>(
                     Comparator.comparingInt(a -> a.avstand));
@@ -75,6 +83,7 @@ public class Dijkstra {
                         if (dNode.avstand > avstander.get(dNode.node.nodeNr)) {
                                 continue;
                         }
+                        sistProsesserteNoder++;
 
                         if (dNode.node == tilNode) {
                                 return rekonstruerVei(forgjenger, fraNode, tilNode);
@@ -118,8 +127,18 @@ public class Dijkstra {
 
         public List<Node> finnXNærmesteInteressepunkter(List<Node> noder, Node fraNode,
             Interessepunkttype ipt, int antallIpt) {
+                return finnXNærmesteInteressepunkter(
+                    noder, fraNode, EnumSet.of(ipt), antallIpt
+                );
+        }
+
+        public List<Node> finnXNærmesteInteressepunkter(List<Node> noder, Node fraNode,
+            Set<Interessepunkttype> typer, int antallIpt) {
                 if (antallIpt <= 0) {
                         return List.of();
+                }
+                if (typer.isEmpty()) {
+                        throw new IllegalArgumentException("Minst én destinasjonstype må velges.");
                 }
 
                 List<Integer> avstander = new ArrayList<>(noder.size());
@@ -144,7 +163,7 @@ public class Dijkstra {
                         }
 
                         for (var i : dNode.node.interessepunkter) {
-                                if (i.typer.contains(ipt)) {
+                                if (i.typer.stream().anyMatch(typer::contains)) {
                                         iptFunnet.add(dNode.node);
                                         break;
                                 }

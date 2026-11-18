@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class ALT {
+        private int sistProsesserteNoder;
+
+        public int hentSistProsesserteNoder() {
+                return sistProsesserteNoder;
+        }
         private class ALTNode {
                 final Node node;
                 final int gScore;
@@ -24,6 +29,7 @@ public class ALT {
         }
 
         private List<Node> alt(Node fra, Node til, ALTData altdata) {
+                sistProsesserteNoder = 0;
 
                 PriorityQueue<ALTNode> prioritetskø = new PriorityQueue<>(
                     Comparator.comparingInt(a -> a.fScore)
@@ -47,6 +53,7 @@ public class ALT {
                         )) {
                                 continue;
                         }
+                        sistProsesserteNoder++;
 
                         // Målet er nådd
                         if (gjeldende.node == til) {

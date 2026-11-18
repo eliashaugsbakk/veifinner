@@ -1,6 +1,8 @@
 /**
  * Denne filen er fullstendig generert av Microsoft Copilot.
  */
+import java.util.EnumSet;
+import java.util.Set;
 
 private enum Algoritme {
         DIJKSTRA,
@@ -103,9 +105,11 @@ private static void finnRute(Scanner input, Sesjon sesjon) throws IOException {
         ALTData altdata = algoritme == Algoritme.ALT
             ? sesjon.hentALTdata() : null;
         long start = System.nanoTime();
+        Dijkstra dijkstra = new Dijkstra();
+        ALT alt = new ALT();
         List<Node> rute = algoritme == Algoritme.DIJKSTRA
-            ? new Dijkstra().dijkstraFraTil(sesjon.noder, fra, til)
-            : new ALT().altFraTil(sesjon.noder, fra, til, altdata);
+            ? dijkstra.dijkstraFraTil(sesjon.noder, fra, til)
+            : alt.altFraTil(sesjon.noder, fra, til, altdata);
         long nanosekunder = System.nanoTime() - start;
 
         if (rute.isEmpty()) {
@@ -125,6 +129,10 @@ private static void finnRute(Scanner input, Sesjon sesjon) throws IOException {
             kjøretid % 100
         );
         skrivAlgoritmetid(algoritme, nanosekunder);
+        System.out.printf("Noder hentet fra prioritetskøen: %d.%n",
+            algoritme == Algoritme.DIJKSTRA
+                ? dijkstra.hentSistProsesserteNoder()
+                : alt.hentSistProsesserteNoder());
 
         Path fil = Path.of("rute.geojson");
         eksporterRute(fil, rute);
@@ -134,12 +142,12 @@ private static void finnRute(Scanner input, Sesjon sesjon) throws IOException {
 private static void finnDestinasjoner(Scanner input, List<Node> noder)
     throws IOException {
         Node fra = lesNode(input, noder, "Start-nodeindeks: ");
-        Interessepunkttype type = lesDestinasjonstype(input);
+        Set<Interessepunkttype> typer = lesDestinasjonstyper(input);
         int antall = lesPositivtHeltall(input, "Antall destinasjoner: ");
 
         long start = System.nanoTime();
         List<Node> treff = new Dijkstra()
-            .finnXNærmesteInteressepunkter(noder, fra, type, antall);
+            .finnXNærmesteInteressepunkter(noder, fra, typer, antall);
         long nanosekunder = System.nanoTime() - start;
 
         if (treff.isEmpty()) {
@@ -147,7 +155,7 @@ private static void finnDestinasjoner(Scanner input, List<Node> noder)
         } else {
                 System.out.printf("Fant %d destinasjon(er):%n", treff.size());
                 for (Node node : treff) {
-                        skrivDestinasjon(node, type);
+                        skrivDestinasjon(node, typer);
                 }
         }
         System.out.printf(
@@ -155,7 +163,7 @@ private static void finnDestinasjoner(Scanner input, List<Node> noder)
         );
 
         Path fil = Path.of("destinasjoner.geojson");
-        eksporterDestinasjoner(fil, treff, type);
+        eksporterDestinasjoner(fil, treff, typer);
         IO.println("GeoJSON-destinasjoner skrevet til " + fil.toAbsolutePath());
 }
 
@@ -169,7 +177,7 @@ private static Node lesNode(Scanner input, List<Node> noder, String ledetekst) {
         }
 }
 
-private static Interessepunkttype lesDestinasjonstype(Scanner input) {
+private static Set<Interessepunkttype> lesDestinasjonstyper(Scanner input) {
         Interessepunkttype[] typer = Interessepunkttype.values();
         IO.println("Destinasjonstype:");
         for (int i = 0; i < typer.length; i++) {
@@ -177,11 +185,29 @@ private static Interessepunkttype lesDestinasjonstype(Scanner input) {
         }
 
         while (true) {
-                int valg = lesHeltall(input, "Velg type: ");
-                if (valg >= 1 && valg <= typer.length) {
-                        return typer[valg - 1];
+                IO.print("Velg type(r), kommaseparert (f.eks. 1,4,5): ");
+                String[] valg = input.nextLine().split(",", -1);
+                Set<Interessepunkttype> valgteTyper = EnumSet.noneOf(
+                    Interessepunkttype.class
+                );
+                boolean gyldig = valg.length > 0;
+                for (String tekst : valg) {
+                        try {
+                                int nummer = Integer.parseInt(tekst.strip());
+                                if (nummer < 1 || nummer > typer.length) {
+                                        gyldig = false;
+                                        break;
+                                }
+                                valgteTyper.add(typer[nummer - 1]);
+                        } catch (NumberFormatException e) {
+                                gyldig = false;
+                                break;
+                        }
                 }
-                IO.println("Ugyldig destinasjonstype.");
+                if (gyldig && !valgteTyper.isEmpty()) {
+                        return valgteTyper;
+                }
+                IO.println("Ugyldig valg. Skriv ett eller flere kategorinummer, f.eks. 1,4,5.");
         }
 }
 
@@ -248,20 +274,27 @@ private static void eksporterRute(Path fil, List<Node> rute) throws IOException 
 }
 
 private static void eksporterDestinasjoner(Path fil, List<Node> treff,
-    Interessepunkttype type) throws IOException {
-        new GeoJsonEksportør().eksporterDestinasjoner(fil, treff, type);
+    Set<Interessepunkttype> typer) throws IOException {
+        new GeoJsonEksportør().eksporterDestinasjoner(fil, treff, typer);
 }
 
-private static void skrivDestinasjon(Node node, Interessepunkttype type) {
+private static void skrivDestinasjon(Node node, Set<Interessepunkttype> typer) {
         String navn = node.interessepunkter.stream()
-            .filter(interessepunkt -> interessepunkt.typer.contains(type))
+            .filter(interessepunkt ->
+                interessepunkt.typer.stream().anyMatch(typer::contains))
             .map(interessepunkt -> interessepunkt.navn)
             .findFirst()
-            .orElse(type.toString());
+            .orElse(beskrivDestinasjonstyper(typer));
         System.out.printf(
             Locale.ROOT, "%s (node %d), GPS %.7f, %.7f%n",
             navn, node.nodeNr, node.breddegrad, node.lengdegrad
         );
+}
+
+private static String beskrivDestinasjonstyper(Set<Interessepunkttype> typer) {
+        return typer.stream()
+            .map(Interessepunkttype::toString)
+            .collect(java.util.stream.Collectors.joining(" eller "));
 }
 
 private static void skrivAlgoritmetid(Algoritme algoritme, long nanosekunder) {
