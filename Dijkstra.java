@@ -146,11 +146,11 @@ public class Dijkstra {
                         for (var i : dNode.node.interessepunkter) {
                                 if (i.typer.contains(ipt)) {
                                         iptFunnet.add(dNode.node);
-                                        continue;
+                                        break;
                                 }
                         }
 
-                        if (iptFunnet.size() == antallIpt) {
+                        if (iptFunnet.size() >= antallIpt) {
                                 return iptFunnet;
                         }
 
