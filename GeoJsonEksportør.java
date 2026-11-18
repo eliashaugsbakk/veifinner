@@ -64,7 +64,8 @@ public class GeoJsonEksportør {
                 geoJson.append("{\n  \"type\": \"FeatureCollection\",\n  \"features\": [");
 
                 for (int i = 0; i < destinasjoner.size(); i++) {
-                        Node node = Objects.requireNonNull(destinasjoner.get(i), "destinasjonsnode");
+                        Node node =
+                            Objects.requireNonNull(destinasjoner.get(i), "destinasjonsnode");
                         String navn = node.interessepunkter.stream()
                             .filter(interessepunkt ->
                                 interessepunkt.typer.stream().anyMatch(typer::contains))

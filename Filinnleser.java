@@ -1,4 +1,6 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +52,11 @@ public class Filinnleser {
                 Node fraNode = noder.get(Integer.parseInt(kantData[0]));
                 Node tilNode = noder.get(Integer.parseInt(kantData[1]));
                 var kant = new Kant(
-                        fraNode,
-                        tilNode,
-                        Integer.parseInt(kantData[2].strip()),
-                        Integer.parseInt(kantData[3].strip()),
-                        Integer.parseInt(kantData[4].strip())
+                    fraNode,
+                    tilNode,
+                    Integer.parseInt(kantData[2].strip()),
+                    Integer.parseInt(kantData[3].strip()),
+                    Integer.parseInt(kantData[4].strip())
                 );
                 fraNode.kanter.add(kant);
                 return kant;
@@ -82,10 +84,11 @@ public class Filinnleser {
 
                 int nodeNr = Integer.parseInt(interessepunktdata[0]);
                 int kode = Integer.parseInt(interessepunktdata[1]);
-                String navn = interessepunktdata[2].substring(1, interessepunktdata[2].length() - 1);
+                String navn =
+                    interessepunktdata[2].substring(1, interessepunktdata[2].length() - 1);
 
                 Node node = noder.get(nodeNr);
-                var interessepunkt = new Interessepunkt(node, kode , navn);
+                var interessepunkt = new Interessepunkt(node, kode, navn);
                 node.interessepunkter.add(interessepunkt);
                 return interessepunkt;
         }

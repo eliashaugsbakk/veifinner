@@ -13,6 +13,7 @@ public class Dijkstra {
         public int hentSistProsesserteNoder() {
                 return sistProsesserteNoder;
         }
+
         private class DijkstraNode {
                 final Node node;
                 final int avstand;

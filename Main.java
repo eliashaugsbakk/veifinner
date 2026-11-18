@@ -1,8 +1,6 @@
 /**
  * Denne filen er fullstendig generert av Microsoft Copilot.
  */
-import java.util.EnumSet;
-import java.util.Set;
 
 private enum Algoritme {
         DIJKSTRA,

@@ -15,6 +15,7 @@ public class Kant {
 
         @Override
         public String toString() {
-                return " fra: " + fraNode.nodeNr + " - til: " + tilNode.nodeNr + " - kjøretid: " + kjøretid + " - lengde: " + lengde + " - fartsgrense: " + fartsgrense;
+                return " fra: " + fraNode.nodeNr + " - til: " + tilNode.nodeNr + " - kjøretid: " +
+                    kjøretid + " - lengde: " + lengde + " - fartsgrense: " + fartsgrense;
         }
 }

@@ -12,18 +12,31 @@ public class Interessepunkt {
         }
 
         void addType(int kode) {
-                if ((kode & 1) == 1) typer.add(Interessepunkttype.STEDSNAVN);
-                if ((kode & 2) == 2) typer.add(Interessepunkttype.BENSINSTASJON);
-                if ((kode & 4) == 4) typer.add(Interessepunkttype.LADESTASJON);
-                if ((kode & 8) == 8) typer.add(Interessepunkttype.SPISESTED);
-                if ((kode & 16) == 16) typer.add(Interessepunkttype.DRIKKESTED);
-                if ((kode & 32) == 32) typer.add(Interessepunkttype.OVERNATTINGSTED);
+                if ((kode & 1) == 1) {
+                        typer.add(Interessepunkttype.STEDSNAVN);
+                }
+                if ((kode & 2) == 2) {
+                        typer.add(Interessepunkttype.BENSINSTASJON);
+                }
+                if ((kode & 4) == 4) {
+                        typer.add(Interessepunkttype.LADESTASJON);
+                }
+                if ((kode & 8) == 8) {
+                        typer.add(Interessepunkttype.SPISESTED);
+                }
+                if ((kode & 16) == 16) {
+                        typer.add(Interessepunkttype.DRIKKESTED);
+                }
+                if ((kode & 32) == 32) {
+                        typer.add(Interessepunkttype.OVERNATTINGSTED);
+                }
         }
 
         @Override
         public String toString() {
                 StringBuilder interessepunktstreng = new StringBuilder();
-                interessepunktstreng.append(node).append(" - navn: ").append(this.navn).append(" - typer: ");
+                interessepunktstreng.append(node).append(" - navn: ").append(this.navn)
+                    .append(" - typer: ");
                 for (Interessepunkttype type : typer) {
                         interessepunktstreng.append(type).append(" ");
                 }

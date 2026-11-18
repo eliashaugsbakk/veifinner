@@ -12,6 +12,7 @@ public class ALT {
         public int hentSistProsesserteNoder() {
                 return sistProsesserteNoder;
         }
+
         private class ALTNode {
                 final Node node;
                 final int gScore;
