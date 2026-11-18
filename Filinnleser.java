@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Filinnleser {
-        public static List<Node> lesNoder(String nodefilsti) {
-                List<Node> nodeliste = null;
+        public static List<Node> lesNoder(String nodefilsti) throws IOException {
+                List<Node> nodeliste;
                 try (BufferedReader br = new BufferedReader(new FileReader(nodefilsti))) {
                         int antallLinjer = Integer.parseInt(br.readLine().strip());
                         nodeliste = new ArrayList<>(antallLinjer);
@@ -15,8 +15,6 @@ public class Filinnleser {
                         if (nodeliste.size() != antallLinjer) {
                                 System.err.println("Leste ikke inn alle noder");
                         }
-                } catch (IOException e) {
-                        System.err.println("Klarte ikke lese inn noder: " + e.getMessage());
                 }
                 return nodeliste;
         }
@@ -30,8 +28,9 @@ public class Filinnleser {
         }
 
 
-        public static List<Kant> lesKanter(String kantfilsti, List<Node> noder) {
-                List<Kant> kantliste = null;
+        public static List<Kant> lesKanter(String kantfilsti, List<Node> noder)
+            throws IOException {
+                List<Kant> kantliste;
                 try (BufferedReader br = new BufferedReader(new FileReader(kantfilsti))) {
                         int antallLinjer = Integer.parseInt(br.readLine().strip());
                         kantliste = new ArrayList<>(antallLinjer);
@@ -42,8 +41,6 @@ public class Filinnleser {
                         if (kantliste.size() != antallLinjer) {
                                 System.err.println("Leste ikke inn alle noder");
                         }
-                } catch (IOException e) {
-                        System.err.println("Klarte ikke lese inn kanter: " + e.getMessage());
                 }
                 return kantliste;
         }
@@ -63,8 +60,9 @@ public class Filinnleser {
                 return kant;
         }
 
-        public static List<Interessepunkt> lesInteressepunkter(String interessepunktfilsti, List<Node> noder) {
-                List<Interessepunkt> interessepunktliste = null;
+        public static List<Interessepunkt> lesInteressepunkter(
+            String interessepunktfilsti, List<Node> noder) throws IOException {
+                List<Interessepunkt> interessepunktliste;
                 try (BufferedReader br = new BufferedReader(new FileReader(interessepunktfilsti))) {
                         int antallLinjer = Integer.parseInt(br.readLine().strip());
                         interessepunktliste = new ArrayList<>(antallLinjer);
@@ -75,8 +73,6 @@ public class Filinnleser {
                         if (interessepunktliste.size() != antallLinjer) {
                                 System.err.println("Leste ikke inn alle noder");
                         }
-                } catch (IOException e) {
-                        System.err.println("Klarte ikke lese inn kanter: " + e.getMessage());
                 }
                 return interessepunktliste;
         }

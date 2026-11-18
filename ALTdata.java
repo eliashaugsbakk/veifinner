@@ -24,7 +24,7 @@ public class ALTdata {
             5542364
         ));
 
-        public ALTdata(List<Node> noder, String avstandFil) {
+        public ALTdata(List<Node> noder, String avstandFil) throws IOException {
                 File fil = new File(avstandFil);
 
                 if (!fil.exists()) {
@@ -42,7 +42,7 @@ public class ALTdata {
                 return avstanderTilLandemerker.get(landemerkeIndeks).get(nodeNr);
         }
 
-        private void preprosessering(List<Node> noder, File avstandFil) {
+        private void preprosessering(List<Node> noder, File avstandFil) throws IOException {
                 List<Node> reverserteNoder = reverserGraf(noder);
                 Dijkstra dijkstra = new Dijkstra();
 
@@ -65,7 +65,7 @@ public class ALTdata {
         }
 
         private void lagrePreprossesring(List<List<Integer>> avstanderFraLandemerker,
-            List<List<Integer>> avstanderTilLandemerker, File avstanderFil) {
+            List<List<Integer>> avstanderTilLandemerker, File avstanderFil) throws IOException {
                 try (BufferedWriter br = new BufferedWriter(new FileWriter(avstanderFil))) {
                         /*
                         landemerke:2531818      //[landemerkenodeid]
@@ -85,14 +85,10 @@ public class ALTdata {
                                         br.write(j + "," + avstanderTilLandemerker.get(i).get(j) + "\n");
                                 }
                         }
-                } catch (IOException e) {
-                        System.err.println(
-                            "Klarte ikke lagre ALT-preprossesert data: " + e.getMessage());
-                        System.exit(1);
                 }
         }
 
-        private void lesPreprosessering(File avstandFil) {
+        private void lesPreprosessering(File avstandFil) throws IOException {
                 avstanderFraLandemerker = new ArrayList<>();
                 avstanderTilLandemerker = new ArrayList<>();
 
@@ -116,8 +112,9 @@ public class ALTdata {
                                         int indeks = landemerker.indexOf(landemerke);
 
                                         if (indeks == -1) {
-                                                System.err.println("Ukjent landemerke i filen: " + landemerke);
-                                                System.exit(1);
+                                                throw new IllegalArgumentException(
+                                                    "Ukjent landemerke i ALTdata-filen: " + landemerke
+                                                );
                                         }
 
                                         if (retning.equals("fra")) {
@@ -125,8 +122,9 @@ public class ALTdata {
                                         } else if (retning.equals("til")) {
                                                 gjeldendeAvstander = avstanderTilLandemerker.get(indeks);
                                         } else {
-                                                System.err.println("Ukjent retning i ALTdata-filen: " + retning);
-                                                System.exit(1);
+                                                throw new IllegalArgumentException(
+                                                    "Ukjent retning i ALTdata-filen: " + retning
+                                                );
                                         }
 
                                 } else if (gjeldendeAvstander != null) {
@@ -136,16 +134,14 @@ public class ALTdata {
                                         int avstand = Integer.parseInt(deler[1]);
 
                                         if (nodeNr != gjeldendeAvstander.size()) {
-                                                System.err.println("Uventet nodeindeks i ALTdata-filen: " + nodeNr);
-                                                System.exit(1);
+                                                throw new IllegalArgumentException(
+                                                    "Uventet nodeindeks i ALTdata-filen: " + nodeNr
+                                                );
                                         }
 
                                         gjeldendeAvstander.add(avstand);
                                 }
                         }
-                } catch (Exception e) {
-                        System.err.println("Klarte ikke lese ALTdata-preprosessert data: " + e.getMessage());
-                        System.exit(1);
                 }
         }
         private List<Node> reverserGraf(List<Node> noder) {

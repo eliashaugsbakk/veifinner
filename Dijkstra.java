@@ -94,7 +94,7 @@ public class Dijkstra {
                 }
 
                 // fant ingen vei
-                return null;
+                return List.of();
         }
 
         private List<Node> rekonstruerVei(List<Node> forgjenger, Node fraNode, Node tilNode) {
